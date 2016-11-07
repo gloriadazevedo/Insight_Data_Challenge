@@ -1,31 +1,38 @@
-#Python script to create 3 output files that have "trusted" or "unverified"
-#Input is two .csv files--one of them has the past payment data that we use
-#to train our routine/model and the second has the new test data that we want to predict
+#!/usr/bin/env python3
+# program that detects suspicious transactions
 
-#libraries that we need
+import sys
+import argparse
 import csv
 
-#Need to figure out how to grab the arguments from the command line run in .sh
-#For now hard code
-batch_filename='../paymo_input/batch_payment.csv'
+# fraud detection algorithm
 
-#import the batch file which has the historical information and store the data somewhere
-#initialize the matrix that we want to store things in
-batch_data=[]
-# with open(batch_filename) as csvfile:
-	# line_reader=csv.reader(csvfile,delimiter=',')
-	# for row in line_reader:
-		# line_split=split(line_reader,',')
-		# batch_data.append(line_split)[1]
-		
-	# print("Hello World")
+def main():
+    parser = argparse.ArgumentParser(description='program that detects suspicious transactions')
+    parser.add_argument('batch_payment_file', help='path to batch_payment.txt')
+    parser.add_argument('stream_payment_file', help='path to stream_payment.txt')
+    parser.add_argument('output1_file', help='path to output1.txt')
+    parser.add_argument('output2_file', help='path to output2.txt')
+    parser.add_argument('output3_file', help='path to output3.txt')
+    args = parser.parse_args()
 
-open_file=open(batch_filename,'r')
-print(open_file)
+    #print('Reading batch payment file: {}'.format(args.batch_payment_file))
+    with open(args.batch_payment_file, encoding='utf-8') as f:
+        reader = csv.reader(f, skipinitialspace=True, quoting=csv.QUOTE_NONE)
+        next(reader) # skip header
+        try:
+            for row in reader:
+                print(row)
+                # id1 = row[1]
+                # id2 = row[2]
+        except csv.Error as e:
+            sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
 
-print(open_file.read(10))
-#open_file.readline().split(str=',')
-	
-	
-#import the stream file which has the new data which needs to be predicted
+    #print('Reading stream payment file: {}'.format(args.stream_payment_file))
 
+    with open(args.output1_file, 'w') as f:
+        pass # TODO
+        #f.write('Hello, World')
+
+if __name__ == '__main__':
+    main()
