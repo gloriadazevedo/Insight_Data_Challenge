@@ -3,11 +3,14 @@
 #the payment/request as unverfied
 
 #Change directory to where the data is
-setwd("/Users/glori/Documents/GitHub/digital-wallet/paymo_input")
+setwd("/Users/glori/Documents/GitHub/Insight_Data_Challenge/paymo_input")
 
 #Import the batch payment data into R--this is the past data that we want to determine
 #if there has been past payments
-full_batch_data<-read.table("batch_payment.csv",header=TRUE,sep=",",fill=TRUE)
+full_batch_data<-read.table("batch_payment.csv",header=TRUE,sep=",",fill=TRUE,stringsAsFactors=FALSE)
+
+#Convert ids to be integers instead of factors
+full_batch_data$id1<-as.numeric(full_batch_data$id1)
 
 #First we want to find a unique list of the users (in either the id1 column or the id2 column)
 #Using nice R functions
