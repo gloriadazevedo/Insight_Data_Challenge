@@ -16,15 +16,30 @@ def main():
     parser.add_argument('output3_file', help='path to output3.txt')
     args = parser.parse_args()
 
+	#initialize the id dictionary
+    id_vector=dict.fromkeys(['first'])
+	
     #print('Reading batch payment file: {}'.format(args.batch_payment_file))
     with open(args.batch_payment_file, encoding='utf-8') as f:
         reader = csv.reader(f, skipinitialspace=True, quoting=csv.QUOTE_NONE)
         next(reader) # skip header
         try:
             for row in reader:
-                print(row)
-                # id1 = row[1]
-                # id2 = row[2]
+                if len(row) >= 3:
+                    id1 = row[1] #print(row) #print(id1)
+                    id2 = row[2]
+                    #Add each of the id's to it's own key
+                    #If the key isn't there then add it, otherwise if the
+                    #key-value pair is already present then don't do anything
+                    if not(id1 in id_vector.keys()):
+                        id_vector[id1]=[id2]
+                    if not(id2 in id_vector.keys()):
+                        id_vector[id2]=[id1]
+                    if id1 in id_vector.keys() and not(id2 in id_vector[id1]):
+                        id_vector[id1].append(id2)
+                    if id2 in id_vector.keys() and not (id1 in id_vector[id2]):
+                        id_vector[id2].append(id1)					
+				
         except csv.Error as e:
             sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
 
