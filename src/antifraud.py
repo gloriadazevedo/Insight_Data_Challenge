@@ -46,23 +46,30 @@ def main():
     #Close the file			
     f.close() #print('Reading stream payment file: {}'.format(args.stream_payment_file))
     #Need to open and classify the new data from the stream file
+    with open(args.output1_file, 'w') as output1_file:
+        with open(args.stream_payment_file, encoding='utf-8') as stream_file:
+            reader = csv.reader(stream_file, skipinitialspace=True, quoting=csv.QUOTE_NONE)
+            next(reader) # skip header
+            try:
+                for row in reader:
+                    #Grab the id's from the row if possible
+                    if len(row)>=3:
+                        id1=row[1]
+                        id2=row[2]
     
-    with open(args.batch_payment_file, encoding='utf-8') as stream_file:
-        reader = csv.reader(stream_file, skipinitialspace=True, quoting=csv.QUOTE_NONE)
-        next(reader) # skip header
-        try:
-            for row in reader:
-                #Grab the id's from the row if possible
-                if len(row)>=3:
-                    id1=row[1]
-                    id2=row[2]
+                    #Test to see if the id's are in the dictionary.
+                    #If so, then it's a trusted transaction
+                    if id1 in id_vector.keys() and id2 in id_vector[id1]:
+                        output1_file.write("trusted\n")
+                    else:
+                        output1_file.write("unverified\n")
+
+            except csv.Error as e:
+                sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
     
-        except csv.Error as e:
-            sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
-    
-    with open(args.output1_file, 'w') as f:
-        pass # TODO
-        #f.write('Hello, World')
+    # with open(args.output1_file, 'w') as f:
+        # pass # TODO
+        # #f.write('Hello, World')
 
 if __name__ == '__main__':
     main()
