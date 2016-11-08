@@ -16,11 +16,15 @@ def check_second_neighbors(dictionary,id1,id2):
     #For each of the first neighbors of id1 then look for id2 in that
     #friend's dictionary value
     for friend in dictionary[id1]:
-        #print(id2)
+        #Write a check to see if that friend has a value
+        if friend in dictionary.keys():
+        #print(friend)
         #print(dictionary[friend])
-        if id2 in dictionary[friend]:
-            return_tf=True
-            break
+            if id2 in dictionary[friend]:
+                return_tf=True
+                break
+        else:
+            print("Error the friend does not have a key")
 
     return return_tf
 
@@ -92,8 +96,7 @@ def main():
         except csv.Error as e:
             sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
 
-    #Close the file
-    f.close() #print('Reading stream payment file: {}'.format(args.stream_payment_file))
+    #print('Reading stream payment file: {}'.format(args.stream_payment_file))
     #Need to open and classify the new data from the stream file
     with open(args.output3_file, 'w') as output3_file:
         with open(args.output2_file, 'w') as output2_file:
@@ -110,27 +113,32 @@ def main():
 
                             #Output 1 constraints--two people had to have a past payment
                             #Also will satisfy the Output 2 and Output 3constraints if they are first-neighbors
+                            #Need to write a check to see if the new id's are in the dictionary keys.  If they're not, then we have no past info on them so we should automatically reject the transaction
+                            if not(id1 in id_vector.keys()) or not(id2 in id_vector.keys()):
+                                output1_file.write("unverified\n")
+                                output2_file.write("unverified\n")
+                                #output3_file.write("unverified\n")
                             #Test to see if the id2's are in value of the dictionary from id1.
                             #If so, then it's a trusted transaction
-                            if id1 in id_vector.keys() and id2 in id_vector[id1]:
+                            elif id1 in id_vector.keys() and id2 in id_vector[id1]:
                                 output1_file.write("trusted\n")
                                 output2_file.write("trusted\n")
-                                output3_file.write("trusted\n")
+                                #output3_file.write("trusted\n")
                             #If they're not first neighbors, then we have to check if they are 
                             #second neighbors or not--satisfies Output 2 and 3
                             elif check_second_neighbors(id_vector,id1,id2):
                                 output2_file.write("trusted\n")
-                                output3_file.write("trusted\n")
+                                #output3_file.write("trusted\n")
                             #Check the third neighbors first so we don't have to check the 4th neighbors if the condition is already satisfied
-                            elif check_third_neighbors(id_vector,id1,id2):
-                                output3_file.write("trusted\n")
+                            #elif check_third_neighbors(id_vector,id1,id2):
+                                #output3_file.write("trusted\n")
                             #Final check for 4th neighbors--if the thwo are 4th neighbors then we can classify them as trusted in the output 3 file
-                            elif check_fourth_neighbors(id_vector,id1,id2):
-                                output3_file.write("trusted\n")
+                            #elif check_fourth_neighbors(id_vector,id1,id2):
+                                #output3_file.write("trusted\n")
                             else:
                                 output1_file.write("unverified\n")
                                 output2_file.write("unverified\n")
-                                output3_file.write("unverified\n")
+                                #output3_file.write("unverified\n")
 
                     except csv.Error as e:
                         sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
