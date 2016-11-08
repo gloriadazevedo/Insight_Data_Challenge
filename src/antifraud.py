@@ -117,24 +117,24 @@ def main():
                             if not(id1 in id_vector.keys()) or not(id2 in id_vector.keys()):
                                 output1_file.write("unverified\n")
                                 output2_file.write("unverified\n")
-                                #output3_file.write("unverified\n")
+                                output3_file.write("unverified\n")
                             #Test to see if the id2's are in value of the dictionary from id1.
                             #If so, then it's a trusted transaction
                             elif id1 in id_vector.keys() and id2 in id_vector[id1]:
                                 output1_file.write("trusted\n")
                                 output2_file.write("trusted\n")
-                                #output3_file.write("trusted\n")
+                                output3_file.write("trusted\n")
                             #If they're not first neighbors, then we have to check if they are 
                             #second neighbors or not--satisfies Output 2 and 3
                             elif check_second_neighbors(id_vector,id1,id2):
                                 output2_file.write("trusted\n")
-                                #output3_file.write("trusted\n")
+                                output3_file.write("trusted\n")
                             #Check the third neighbors first so we don't have to check the 4th neighbors if the condition is already satisfied
-                            #elif check_third_neighbors(id_vector,id1,id2):
-                                #output3_file.write("trusted\n")
+                            elif check_third_neighbors(id_vector,id1,id2):
+                                output3_file.write("trusted\n")
                             #Final check for 4th neighbors--if the thwo are 4th neighbors then we can classify them as trusted in the output 3 file
-                            #elif check_fourth_neighbors(id_vector,id1,id2):
-                                #output3_file.write("trusted\n")
+                            elif check_fourth_neighbors(id_vector,id1,id2):
+                                output3_file.write("trusted\n")
                             else:
                                 output1_file.write("unverified\n")
                                 output2_file.write("unverified\n")
