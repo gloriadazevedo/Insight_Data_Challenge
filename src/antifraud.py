@@ -143,9 +143,18 @@ def main():
                     except csv.Error as e:
                         sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
 
-    # with open(args.output1_file, 'w') as f:
-        # pass # TODO
-        # #f.write('Hello, World')
-
 if __name__ == '__main__':
     main()
+
+#Other notes: In the future we would also want to add a check for a payment or request of
+#an abnormally large amount.  This large amount would depend on the past payments between
+#two people.  Also, the algorithm above should add trusted payments to the training data
+#if the connections are not already there for scenarios 2 and 3.  For example, if A and C
+#are second neighbors (and not first neighbors) and we classify their payment to be trusted
+#then we should add C to the [first] neighbors of A and add A to the [first] neighbors of C.
+#In addition, to make the code run more efficiently, I would write a function or routine 
+#that creates a vector to track of all the second neighbors of an id 
+#(probably using another dictionary) so that the values are a distinct list that we compare
+#ids from when we use the 3rd scenario (3rd or 4th neighbors of a person) instead of 
+#searching the neighbors of each neighbor of an id.  At worst, the searching would be 
+#as bad as it currently is.
