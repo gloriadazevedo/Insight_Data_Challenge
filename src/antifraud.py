@@ -51,12 +51,34 @@ def check_fourth_neighbors(dictionary,id1,id2):
     #Initialize return value
     return_tf=False
     
+    #Original first version of the 4th neighbor check
     #For each of the second neighbors of id1, need to check if id2 is a second neighbor
+    # for first in dictionary[id1]:
+        # for second in dictionary[first]:
+            # if check_second_neighbors(dictionary,first,second):
+                # return_tf=True
+                # break
+                
+    #Second version of the 4th neighbor check
+    #For each of the second neighbors of id1, append the neighbors of 
+    #the second neighbors in a list (i.e. third neighbors of id1)
+    third_neighbor_list=[]
     for first in dictionary[id1]:
         for second in dictionary[first]:
-            if check_second_neighbors(dictionary,first,second):
-                return_tf=True
-                break
+            for third in dictionary[second]:
+                if not(third in third_neighbor_list):
+                    third_neighbor_list.append(third)
+    
+    #Then now we have the distinct list of the third neighbors of id1
+    #All we have to do is check to see if id2 is in the neighbor list of one of them
+    for third in third_neighbor_list:
+        if(id2 in dictionary[third]):
+            return_tf=True
+            break
+    
+    #Alternatively we can also append all the third neighbors into a 
+    #giant list with duplicates then filter it for the duplicates and then search for id2
+    #in the neighbors of each of those.
 
     return return_tf
 
@@ -138,7 +160,7 @@ def main():
                             else:
                                 output1_file.write("unverified\n")
                                 output2_file.write("unverified\n")
-                                #output3_file.write("unverified\n")
+                                output3_file.write("unverified\n")
 
                     except csv.Error as e:
                         sys.exit('file {}, line {}: {}'.format(args.batch_payment_file, reader.line_num, e))
