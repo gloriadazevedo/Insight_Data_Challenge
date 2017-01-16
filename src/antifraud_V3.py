@@ -2,6 +2,14 @@
 # program that detects suspicious transactions
 #Version 3 of the program that uses the original 4th neighbor checking method
 #but also will add trusted "friends" to be a first neighbor
+#This mainly works for the 3rd method which takes up to 4th degree neighbors for trusted 
+#payments however it will also affect the global neighbor network for the first and 
+#second neighbor checking
+#i.e. if two people are 3rd neighbors then this is an untrusted payment for first or 
+#second neighbors but passes for the 4th neighbors and now they are considered friends
+#In real life there may be different levels of security that may depend on the amount
+#being sent as well as past transaction history that can affect the different security
+#ratings between two parties.
 import sys
 import argparse
 import csv
