@@ -95,6 +95,7 @@ def main():
     id_vector=dict.fromkeys(['first'])
     
     #print('Reading batch payment file: {}'.format(args.batch_payment_file))
+	#Defined as the training data
     with open(args.batch_payment_file, encoding='utf-8') as f:
         reader = csv.reader(f, skipinitialspace=True, quoting=csv.QUOTE_NONE)
         next(reader) # skip header

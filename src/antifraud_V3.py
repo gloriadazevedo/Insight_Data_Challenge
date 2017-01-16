@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # program that detects suspicious transactions
-
+#Version 3 of the program that uses the original 4th neighbor checking method
+#but also will add trusted "friends" to be a first neighbor
 import sys
 import argparse
 import csv
@@ -144,12 +145,21 @@ def main():
                             elif check_second_neighbors(id_vector,id1,id2):
                                 output2_file.write("trusted\n")
                                 output3_file.write("trusted\n")
+								#Also we add this second neighbor to be first neighbors
+								id_vector[id1].append(id2)
+								id_vector[id2].append(id1)
                             #Check the third neighbors first so we don't have to check the 4th neighbors if the condition is already satisfied
                             elif check_third_neighbors(id_vector,id1,id2):
                                 output3_file.write("trusted\n")
+								#Also we add this second neighbor to be first neighbors
+								id_vector[id1].append(id2)
+								id_vector[id2].append(id1)
                             #Final check for 4th neighbors--if the thwo are 4th neighbors then we can classify them as trusted in the output 3 file
                             elif check_fourth_neighbors(id_vector,id1,id2):
                                 output3_file.write("trusted\n")
+								#Also we add this second neighbor to be first neighbors
+								id_vector[id1].append(id2)
+								id_vector[id2].append(id1)
                             else:
                                 output1_file.write("unverified\n")
                                 output2_file.write("unverified\n")
